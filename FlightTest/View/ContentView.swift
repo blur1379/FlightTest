@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     //MARK: Properties
-    
+    var network = Network()
     
     //MARK: View
     var body: some View {
@@ -17,12 +17,13 @@ struct ContentView: View {
             Image(systemName: "globe")
                 .imageScale(.large)
                 .foregroundColor(.accentColor)
+           
             Text("Hello, world!")
         }
         .padding()
     }
 }
-//MARK: Preview 
+//MARK: Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
