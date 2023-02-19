@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
-
+import Lottie
 struct ContentView: View {
     //MARK: Properties
     var network = Network()
     @StateObject var needHelpViewModel : NeedHelpViewModel = NeedHelpViewModel()
     @State var isShowMoreEnabele: Bool = true
+    @State private var isShowingErrorForCallApi  = false
     //MARK: View
     var body: some View {
         ZStack(alignment: .top) {
@@ -38,10 +39,20 @@ struct ContentView: View {
                .onTapGesture {
                    isShowMoreEnabele.toggle()
                }
+                // show error or need help
+                if isShowingErrorForCallApi{
+                VStack{
+                    Spacer()
+                    LottieView(lottieFile: "notConnectionLottie ")
+                    Spacer()
+                }.background(Color.white)
+                   
+                }else{
+                    // need help section
+                    NeedHelpView(pageItems: $needHelpViewModel.pageItems, needHelpViewModel: needHelpViewModel)
+                        .background(.white)
+                }
                 
-                // need help section
-                NeedHelpView(pageItems: $needHelpViewModel.pageItems, needHelpViewModel: needHelpViewModel)
-                    .background(.white)
                 
             }
             
@@ -52,11 +63,17 @@ struct ContentView: View {
        
         .onAppear{
             Task{
-               await needHelpViewModel.GetNeedHelp()
+                await needHelpViewModel.GetNeedHelp()
+                if needHelpViewModel.needHelpData == nil || needHelpViewModel.error != nil {
+                    isShowingErrorForCallApi = true
+                }else{
+                    isShowingErrorForCallApi = false
+                }
 
             }
            
         }
+        
        
     }
 }
